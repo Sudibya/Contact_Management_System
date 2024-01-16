@@ -1,30 +1,21 @@
 const express = require('express');
 
 const router= express.Router();
-const {getContacts, createContacts}= require("../controllers/contactController");
+const {getContacts, createContacts,updateContact, deleteContact,getAContact}= require("../controllers/contactController");
 
- router.route("/").get(getContacts);
+ router.route("/").get(getContacts).post(createContacts);
 
-router.route('/').post(createContacts);
+// We can also make multiple http calls from same route. Just like the above example.
 
-
-router.route('/:id').put( (req, res) =>{
-    // res.send("Get all the consul contacts");
-    res.status(269).json({message:`Update contact for ${req.params.id}`});
-
-});
-
-router.route('/:id').delete( (req, res) =>{
-    // res.send("Get all the consul contacts");
-    res.status(269).json({ message: `Delete contact for ${req.params.id}` });
+// router.route('/').post(createContacts);
 
 
-});
+router.route('/:id').put(updateContact).delete(deleteContact).get(getAContact);
+
+// router.route('/:id').delete(deleteContact);
 
 
-router.route('/:id').get( (req, res) =>{
-    // res.send("Get all the consul contacts");
-    res.status(269).json({message:`Get contact for ${req.params.id}`});
+// router.route('/:id').get(getAContact);
 
-});
+
 module.exports = router;
