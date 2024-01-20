@@ -13,7 +13,7 @@ app.use(express.json());//This is to parse the incoming JSON data from the clien
 
 app.use("/api/contacts", require("./routes/contactRoutes") );
 
-// app.use(errorHandler);
+app.use(errorHandler);
 
 
 app.listen(port, () => {

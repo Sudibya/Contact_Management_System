@@ -1,18 +1,21 @@
+
+
+
 // @desc Get all the contacts
 // @route GET /api/contacts
 // @access public
 
-const getContacts = (req, res) =>{
+const getContacts = async (req, res) =>{
     // res.send("Get all the consul contacts");
     res.status(200).json({message:"Get all the contacts"});
 
-};
+};   /// IN THE ABOVE WE NEED TO RESOLVE THE PROMISE THAT WE GET FROM MONGODB FOR THAT ONLY WE NEED TO USE THE ASYNC.   
 
 // @desc Create new contacts
 // @route Post /api/contacts
 // @access public
 
-const createContacts = (req, res) =>{
+const createContacts = async (req, res) =>{
     // res.send("Get all the consul contacts");
     console.log("The request body is:", req.body);
 
@@ -32,19 +35,19 @@ const createContacts = (req, res) =>{
 // @route Post /api/contacts
 // @access public
 
-const updateContact = (req, res) =>{
+const updateContact = async (req, res) =>{
     // res.send("Get all the consul contacts");
     res.status(202).json({message:`Update the contact for ${req.params.id}`});
 
 };
 
-const deleteContact = (req, res) =>{
+const deleteContact = async (req, res) =>{
     // res.send("Get all the consul contacts");
     res.status(203).json({message: `Delete contact for ${req.params.id}` });
 
 };
 
-const getAContact = (req, res) =>{
+const getAContact =async (req, res) =>{
     // res.send("Get all the consul contacts");
     res.status(204).json({message: `The contact is ${req.params.id}` });
 
