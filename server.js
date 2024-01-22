@@ -1,9 +1,11 @@
 const express = require('express');
 const errorHandler = require('./middleware/errorHandler');
+const connectDb = require('./config/dbConnection');
 
 // Now we can use the process module to use the data from the .env file.
 const dotenv= require("dotenv").config();
 
+connectDb();
 
 const app = express();
 
