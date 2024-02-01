@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-
+const Contact = require('../models/contactModel');
 
 // @desc Get all the contacts
 // @route GET /api/contacts
@@ -7,27 +7,35 @@ const asyncHandler = require('express-async-handler');
 
 const getContacts =asyncHandler( async (req, res) =>{
     // res.send("Get all the consul contacts");
-    res.status(200).json({message:"Get all the contacts"});
+    const getContacts =await Contact.find();
+
+
+    res.status(200).json(getContacts);
 
 });   /// IN THE ABOVE WE NEED TO RESOLVE THE PROMISE THAT WE GET FROM MONGODB FOR THAT ONLY WE NEED TO USE THE ASYNC.   
 
 // @desc Create new contacts
 // @route Post /api/contacts
-// @access public
+// @access p.getAContact
 
-const createContacts =asyncHandler( async (req, res) =>{
-    // res.send("Get all the consul contacts");
+
+
+const createContacts = asyncHandler(async (req, res) => {
     console.log("The request body is:", req.body);
 
-    const {name, email, phone} = req.body;
+    const { name, email, phone } = req.body;
 
-    if(!name || !email|| !phone){
-        res.status(400);
-        throw new Error("All fields are required");
+    if (!name || !email || !phone) {
+        return res.status(400).json({ message: "All fields are required" });
     }
 
-    res.status(201).json({message:"Create a new contact"});
-
+    try {
+        const contact = await Contact.create({ name, email, phone });
+        res.status(201).json({ message: "Contact created successfully", contact });
+    } catch (error) {
+        console.error("Error creating contact:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
 
@@ -49,7 +57,21 @@ const deleteContact =asyncHandler( async (req, res) =>{
 
 const getAContact =asyncHandler( async (req, res) =>{
     // res.send("Get all the consul contacts");
-    res.status(204).json({message: `The contact is ${req.params.id}` });
+    console.log(req.params.id);
+    try {
+            const contact = await Contact.findById((req.params.id).toString());
+
+            if(!contact){
+                res.status(404).json({message:"Contact not found"});
+            }else{
+                res.status(200).json({contact});
+            }
+
+    }
+    catch (err) {
+            console.error(err);
+            res.status(500).json({message:"Internal Server Error"});
+    }
 
 });
 
