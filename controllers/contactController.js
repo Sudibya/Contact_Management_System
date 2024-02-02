@@ -45,13 +45,40 @@ const createContacts = asyncHandler(async (req, res) => {
 
 const updateContact =asyncHandler( async (req, res) =>{
     // res.send("Get all the consul contacts");
-    res.status(202).json({message:`Update the contact for ${req.params.id}`});
+
+    try {
+        
+        const {name, email, phone} = req.body;
+
+        const contactUpdate = await Contact.findByIdAndUpdate(req.params.id,{name, email, email}, {new: true, runValidators: true});
+        if(!contactUpdate){
+            res.status(404).json({ message:"Contact not found, give a proper Id"});
+        }else{
+            res.status(202).json({message:"Contact Updated Successfully"});
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({message:"Internal Server Error"});    
+    }
 
 });
 
 const deleteContact =asyncHandler( async (req, res) =>{
     // res.send("Get all the consul contacts");
-    res.status(203).json({message: `Delete contact for ${req.params.id}` });
+    // res.status(203).json({message: `Delete contact for ${req.params.id}` });
+    try {
+        const deleteContact = await Contact.findByIdAndDelete(req.params.id);
+
+        if(!deleteContact){
+            res.status(404).json({message:"Contact not find the contact try again"});
+        }else{
+            res.status(203).json({message: "Contact deleted successfully"});
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({message:"Internal Server Error"});
+    }
+
 
 });
 
