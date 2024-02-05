@@ -9,7 +9,7 @@ connectDb();
 
 const app = express();
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;//Here process is a global keyword by Node.js that gives information about the current node.js process running.
 
 app.use(express.json());//This is to parse the incoming JSON data from the client and change it to JS objects.
 

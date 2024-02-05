@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Users = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Register the user with this controller
 // PUT method api/users/register
@@ -31,23 +32,43 @@ const registerUser = asyncHandler(async(req, res)=>{
 
 
 // Register the user with this controller
-// PUT method api/users/register
+// PUT method api/users/loginUser
 // @access public
 const loginUser = asyncHandler(async(req, res)=>{
-    res.json({message: "User is logged in. TA DA"});
+    
 
-    const {username, password}= req.body;
+    const {email, password}= req.body;
 
-    const checkUser = await Users.findOne(username);
+    const checkUser = await Users.findOne({email});
 
+    console.log(checkUser);
 
-
-    if(!username && !password) {
-            res.status(404).json({message: "All fields are required."});
+    if(!email && !password) { 
+        console.log(1);
+    
+        res.status(404).json({message: "All fields are required."});
     }else if(!checkUser){
-            res.status(404).json({message: "User not found"});
+        console.log(checkUser);
+   
+        res.status(404).json({message: "User not found"});
     }else if(checkUser && (await bcrypt.compare(password,checkUser.password))){
-            
+        console.log(3);
+   
+        const accessToken = jwt.sign({
+                user:{
+                    email: checkUser.email,
+                    password: checkUser.password,
+                    id: checkUser.id
+                }, 
+            },process.env.ACCESS_TOKEN,
+            {expiresIn:"1m"}
+            );
+            res.status(200).json({accessToken, message:"User is successfully logged in"});
+    }else{
+        console.log(4);
+
+        res.status(400).json({message: "Invalid username or password"});
+        console.log(checkUser.email);
     }
 }
 );
@@ -57,7 +78,7 @@ const loginUser = asyncHandler(async(req, res)=>{
 // PUT method api/users/register
 // @access public
 const currentUsers = asyncHandler(async(req, res)=>{
-    res.json({message: "Current users that are registered."});
+    res.json({message: "The current use is logged in"});
 });
 
 
